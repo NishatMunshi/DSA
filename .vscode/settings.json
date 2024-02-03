@@ -2,6 +2,7 @@
     "files.associations": {
         "list.h": "c",
         "stdlib.h": "c",
-        "singly_linked_list.h": "c"
+        "singly_linked_list.h": "c",
+        "tower_of_hanoi.h": "c"
     }
 }

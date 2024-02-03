@@ -1,19 +1,18 @@
-#include <include/doubly_linked_list.h>
+#include <LL_based_stack.h>
 
 int main()
 {
-    Doubly_Linked_List *list;
-    init_list(list);
+    LL_stack stack;
+    init_LL_stack(&stack);
 
-    for (int data = 0; data < 25; ++data)
-    {
-        add_before(list, list->size, data);
-    }
-    // remove_elem(list, 3);
-    // remove_elem(list, 3);
-    // remove_elem(list, 0);
-    display(list);
-    printf("\n");
-    display_reverse(list);
+    for(unsigned i = 0; i<20; ++i)
+    LL_stack_push(&stack, i);
+    print_LL_stack(&stack);
+
+    for(unsigned i = 0; i<10; ++i)
+    LL_stack_pop(&stack);
+    print_LL_stack(&stack);
+
+
     return 0;
 }
