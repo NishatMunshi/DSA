@@ -4,12 +4,11 @@
 struct Binary_Search_Tree;
 typedef struct Node
 {
-    unsigned id;
     int data;
     struct Binary_Search_Tree *leftChild, *rightChild;
 } Node;
 
-// wrapper over root node
+// wrapper around root node
 typedef struct Binary_Search_Tree
 {
     Node *root;
@@ -17,6 +16,13 @@ typedef struct Binary_Search_Tree
 
 // checks if a tree is empty (ie its root is NULL)
 int empty(Binary_Search_Tree const *const _tree) { return _tree->root == NULL; }
+// checks if a on empty tree is a leaf or not
+int leaf(Binary_Search_Tree const *const _tree)
+{
+    if (empty(_tree))
+        return 0;
+    return empty(_tree->root->leftChild) && empty(_tree->root->rightChild);
+}
 
 // allocates memory for an empty tree
 Binary_Search_Tree *create_tree(void)
@@ -46,10 +52,7 @@ void delete_tree(Binary_Search_Tree *const _tree)
 // allocates memory for a new node with a brand new id and two empty subtrees
 Node *create_node(int const _data)
 {
-    static unsigned nodeID = 0;
-
     Node *newNode = (Node *)malloc(sizeof(Node));
-    newNode->id = nodeID++;
     newNode->data = _data;
     newNode->leftChild = create_tree();
     newNode->rightChild = create_tree();
@@ -57,41 +60,12 @@ Node *create_node(int const _data)
     return newNode;
 }
 
-// checks if a node is a leaf node or not
-int leaf(Node const *const _node)
-{
-    return empty(_node->leftChild) && empty(_node->rightChild);
-}
-
-unsigned node_count(Binary_Search_Tree const *const _tree)
-{
-    if (empty(_tree))
-        return 0;
-    if (leaf(_tree->root))
-        return 1;
-    return 1 + node_count(_tree->root->leftChild) +
-           node_count(_tree->root->rightChild);
-}
-
-unsigned leaf_count(Binary_Search_Tree const *const _tree)
-{
-    if (empty(_tree))
-        return 0;
-    if (leaf(_tree->root))
-        return 1;
-    return leaf_count(_tree->root->leftChild) +
-           leaf_count(_tree->root->rightChild);
-}
-
-unsigned maximum(unsigned const _a, unsigned const _b)
-{
-    return _a > _b ? _a : _b;
-}
+unsigned maximum(unsigned const _a, unsigned const _b) { return _a > _b ? _a : _b; }
 unsigned number_of_levels(Binary_Search_Tree const *const _tree)
 {
     if (empty(_tree))
         return 0;
-    if (leaf(_tree->root))
+    if (leaf(_tree))
         return 1;
     return 1 + maximum(number_of_levels(_tree->root->leftChild),
                        number_of_levels(_tree->root->rightChild));
@@ -124,27 +98,27 @@ int remove_element(Binary_Search_Tree *const _tree, int const _data, unsigned co
         return 0;
     if (_data == _tree->root->data)
     {
-        if (leaf(_tree->root))
+        if (leaf(_tree))
         {
-            // delete its empty subtrees
-            delete_tree(_tree->root->leftChild);
-            delete_tree(_tree->root->rightChild);
+            // free its empty subtree wrappers
+            free(_tree->root->leftChild);
+            free(_tree->root->rightChild);
 
-            printf("Deleting Node id %d at level %d\n", _tree->root->id, _level);
-            // clear this tree's left child, right child  and root node
+            printf("Deleting Node data %d at level %d\n", _tree->root->data, _level);
+            // make this tree empty
             delete_tree(_tree);
             return 1;
         }
         if (empty(_tree->root->leftChild))
         {
-            // free the left child tree
+            // free the left child tree wrapper
             free(_tree->root->leftChild);
             // save right child's root address in a variable
             Node *rightChildRoot = _tree->root->rightChild->root;
             // free right child tree wrapper
             free(_tree->root->rightChild);
             // free this tree's root node (actual deletion)
-            printf("Deleting Node id %d at level %d\n", _tree->root->id, _level);
+            printf("Deleting Node data %d at level %d\n", _tree->root->data, _level);
             free(_tree->root);
             // copy the right child's root address to this tree's root
             _tree->root = rightChildRoot;
@@ -152,14 +126,14 @@ int remove_element(Binary_Search_Tree *const _tree, int const _data, unsigned co
         }
         if (empty(_tree->root->rightChild))
         {
-            // free the right child tree
+            // free the right child tree wrapper
             free(_tree->root->rightChild);
             // save left child's root address in a variable
             Node *leftChildRoot = _tree->root->leftChild->root;
             // free left child tree wrapper
             free(_tree->root->leftChild);
             // free this tree's root node (actual deletion)
-            printf("Deleting Node id %d at level %d\n", _tree->root->id, _level);
+            printf("Deleting Node data %d at level %d\n", _tree->root->data, _level);
             free(_tree->root);
             // copy the left child's root address to this tree's root
             _tree->root = leftChildRoot;
@@ -168,7 +142,7 @@ int remove_element(Binary_Search_Tree *const _tree, int const _data, unsigned co
         // if none of left and right child are empty then codeflow comes here
         // we can copy a node's data to this tree root's data if
         // that node satisfies the binary tree condition
-        // such node is found in the left subtress of the right subtree of this tree
+        // such node is found in the left subtrees of the right subtree of this tree
         Node *nodeToCopyFrom = _tree->root->rightChild->root;
         while (!empty(nodeToCopyFrom->leftChild))
             nodeToCopyFrom = nodeToCopyFrom->leftChild->root;
@@ -190,19 +164,19 @@ void traverse_in_order(Binary_Search_Tree const *const _tree)
         return;
 
     traverse_in_order(_tree->root->leftChild);
-    printf("Visiting ID %d, data = %d\n", _tree->root->id, _tree->root->data);
+    printf("Visiting data = %d\n", _tree->root->data);
     traverse_in_order(_tree->root->rightChild);
 }
 
 int balance_factor(Binary_Search_Tree const *const _tree)
 {
-    if (empty(_tree))
-        return 0;
     int heightOfLeftChild = number_of_levels(_tree->root->leftChild);
     int heightOfRightChild = number_of_levels(_tree->root->rightChild);
 
     return heightOfLeftChild - heightOfRightChild;
 }
+
+int height_balanced(Binary_Search_Tree const *const _tree) { return abs(balance_factor(_tree)) < 2; }
 
 void print_balance_factors(Binary_Search_Tree const *const _tree)
 {
@@ -211,13 +185,6 @@ void print_balance_factors(Binary_Search_Tree const *const _tree)
     print_balance_factors(_tree->root->leftChild);
     printf("Node data %d, balance factor = %d\n", _tree->root->data, balance_factor(_tree));
     print_balance_factors(_tree->root->rightChild);
-}
-
-int height_balanced(Binary_Search_Tree const *const _tree)
-{
-    int heightOfLeftChild = number_of_levels(_tree->root->leftChild);
-    int heightOfRightChild = number_of_levels(_tree->root->rightChild);
-    return abs(heightOfLeftChild - heightOfRightChild) < 2;
 }
 
 unsigned two_to_the_power_of(unsigned const _exponent)
@@ -267,11 +234,9 @@ void balance_height_by_LL_rotation(Binary_Search_Tree *const _tree)
     _tree->root->rightChild->root = pivot;
     _tree->root->rightChild->root->leftChild->root = rightChildOfLeftChildOfPivot;
 
-
     balance_height_by_LL_rotation(_tree->root->leftChild);
     balance_height_by_LL_rotation(_tree);
     balance_height_by_LL_rotation(_tree->root->rightChild);
-
 }
 
 int main(void)
@@ -282,9 +247,6 @@ int main(void)
     int data;
     do
     {
-        printf("\nNode Count = %u, Leaf Count = %u, Number of Levels = %u\n",
-               node_count(tree), leaf_count(tree), number_of_levels(tree));
-
         printf("\nMenu:\n");
         printf("1. Insert Element\n");
         printf("2. Delete Element\n");
@@ -335,7 +297,6 @@ int main(void)
 
         // printing the tree
         printf("\nTree:\n");
-
         for (unsigned allowedDepth = 0; allowedDepth < number_of_levels(tree); allowedDepth++)
         {
             for (unsigned i = 0; i < two_to_the_power_of(number_of_levels(tree) - allowedDepth - 1) - 1; i++)
