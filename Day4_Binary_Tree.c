@@ -2,25 +2,29 @@
 #include <stdlib.h>
 
 struct Binary_Tree;
-typedef struct Node {
+typedef struct Node
+{
   unsigned id;
   int data;
   struct Binary_Tree *leftChild, *rightChild;
 } Node;
-typedef struct Binary_Tree {
+typedef struct Binary_Tree
+{
   Node *root;
 } Binary_Tree;
 // checks if a tree is empty (ie its root is NULL)
 int empty(Binary_Tree const *const _tree) { return _tree->root == NULL; }
 // allocates memory for an empty tree
-Binary_Tree *create_tree(void) {
+Binary_Tree *create_tree(void)
+{
   Binary_Tree *tree = (Binary_Tree *)malloc(sizeof(Binary_Tree));
   tree->root = NULL;
 
   return tree;
 }
 // allocates memory for a new node with a brand new id and two empty subtrees
-Node *create_node(int const _data) {
+Node *create_node(int const _data)
+{
   static unsigned nodeID = 0;
 
   Node *newNode = (Node *)malloc(sizeof(Node));
@@ -33,11 +37,13 @@ Node *create_node(int const _data) {
 }
 
 // checks if a node is a leaf node or not
-int leaf(Node const *const _node) {
+int leaf(Node const *const _node)
+{
   return empty(_node->leftChild) && empty(_node->rightChild);
 }
 
-unsigned node_count(Binary_Tree const *const _tree) {
+unsigned node_count(Binary_Tree const *const _tree)
+{
   if (empty(_tree))
     return 0;
   if (leaf(_tree->root))
@@ -46,7 +52,8 @@ unsigned node_count(Binary_Tree const *const _tree) {
          node_count(_tree->root->rightChild);
 }
 
-unsigned leaf_count(Binary_Tree const *const _tree) {
+unsigned leaf_count(Binary_Tree const *const _tree)
+{
   if (empty(_tree))
     return 0;
   if (leaf(_tree->root))
@@ -55,10 +62,12 @@ unsigned leaf_count(Binary_Tree const *const _tree) {
          leaf_count(_tree->root->rightChild);
 }
 
-unsigned maximum(unsigned const _a, unsigned const _b) {
+unsigned maximum(unsigned const _a, unsigned const _b)
+{
   return _a > _b ? _a : _b;
 }
-unsigned number_of_levels(Binary_Tree const *const _tree) {
+unsigned number_of_levels(Binary_Tree const *const _tree)
+{
   if (empty(_tree))
     return 0;
   if (leaf(_tree->root))
@@ -68,7 +77,8 @@ unsigned number_of_levels(Binary_Tree const *const _tree) {
 }
 
 // leaves the argument as an empty tree
-void delete_tree(Binary_Tree *const _tree) {
+void delete_tree(Binary_Tree *const _tree)
+{
   if (empty(_tree))
     return;
 
@@ -86,7 +96,8 @@ void delete_tree(Binary_Tree *const _tree) {
   _tree->root = NULL; // mark this tree as empty
 }
 
-void traverse_pre_order(Binary_Tree const *const _tree) {
+void traverse_pre_order(Binary_Tree const *const _tree)
+{
   if (empty(_tree))
     return;
 
@@ -94,7 +105,8 @@ void traverse_pre_order(Binary_Tree const *const _tree) {
   traverse_pre_order(_tree->root->leftChild);
   traverse_pre_order(_tree->root->rightChild);
 }
-void traverse_in_order(Binary_Tree const *const _tree) {
+void traverse_in_order(Binary_Tree const *const _tree)
+{
   if (empty(_tree))
     return;
 
@@ -102,7 +114,8 @@ void traverse_in_order(Binary_Tree const *const _tree) {
   printf("Visiting ID %d, data = %d\n", _tree->root->id, _tree->root->data);
   traverse_in_order(_tree->root->rightChild);
 }
-void traverse_post_order(Binary_Tree const *const _tree) {
+void traverse_post_order(Binary_Tree const *const _tree)
+{
   if (empty(_tree))
     return;
 
@@ -112,10 +125,12 @@ void traverse_post_order(Binary_Tree const *const _tree) {
 }
 
 int insert_element(Binary_Tree *const _tree, int const _data,
-                   unsigned const _allowedDepth, unsigned const _level) {
+                   unsigned const _allowedDepth, unsigned const _level)
+{
   // try to insert in this level
   int insertedInThisLevel = 0;
-  if (empty(_tree)) {
+  if (empty(_tree))
+  {
     _tree->root = create_node(_data);
     printf("Insertion done at level %d\n", _level);
     insertedInThisLevel = 1; // successful insertion
@@ -137,12 +152,14 @@ int insert_element(Binary_Tree *const _tree, int const _data,
   return insert_element(_tree->root->rightChild, _data, _allowedDepth - 1,
                         _level + 1);
 }
-int remove_element(Binary_Tree *const _tree, unsigned const _id) {
+int remove_element(Binary_Tree *const _tree, unsigned const _id)
+{
   if (empty(_tree))
     return 0; // failure
 
   // if this tree's root's id matches then delete this tree
-  if (_tree->root->id == _id) {
+  if (_tree->root->id == _id)
+  {
     delete_tree(_tree);
     printf("Deletion Successful\n");
     return 1; // success
@@ -156,7 +173,8 @@ int remove_element(Binary_Tree *const _tree, unsigned const _id) {
   return remove_element(_tree->root->rightChild, _id);
 }
 
-int strictly_binary(Binary_Tree const *const _tree) {
+int strictly_binary(Binary_Tree const *const _tree)
+{
   // empty tree is strictly binary
   if (empty(_tree))
     return 1;
@@ -174,7 +192,8 @@ int strictly_binary(Binary_Tree const *const _tree) {
          strictly_binary(_tree->root->rightChild);
 }
 int complete_binary(Binary_Tree const *const _tree, unsigned const _depth,
-                    unsigned const _maxDepth) {
+                    unsigned const _maxDepth)
+{
   // firstly it has to be strictly binary
   if (!strictly_binary(_tree))
     return 0;
@@ -182,7 +201,8 @@ int complete_binary(Binary_Tree const *const _tree, unsigned const _depth,
   if (empty(_tree))
     return 1;
   // if we find a leaf at depth < max depth then immediately return 0
-  if (leaf(_tree->root)) {
+  if (leaf(_tree->root))
+  {
     if (_depth < _maxDepth)
       return 0;
   }
@@ -190,30 +210,86 @@ int complete_binary(Binary_Tree const *const _tree, unsigned const _depth,
          complete_binary(_tree->root->rightChild, _depth + 1, _maxDepth);
 }
 int almost_complete_binary(Binary_Tree const *const _tree, unsigned const _depth,
-                           unsigned const _maxDepth) {
-  // firstly it has to be strictly binary
-  if (!strictly_binary(_tree))
-    return 0;
-  // empty tree is almost complete binary
+                           unsigned const _maxDepth)
+{
+  // empty tree is almost complete binary (base case)
   if (empty(_tree))
     return 1;
 
-  // if we find a leaf at depth < number of levels - 1 then immediately return 0
-  if (leaf(_tree->root)) {
-    if (_depth < _maxDepth - 1)
+  // another base case
+  // if (leaf(_tree->root) && _depth == _maxDepth)
+  //   return 1;
+
+  // condition 1
+  if ((empty(_tree->root->leftChild) || empty(_tree->root->rightChild)) && _depth < _maxDepth - 1)
+    return 0;
+
+  // condition  2
+  if (_depth!= _maxDepth && number_of_levels(_tree->root->rightChild) == _maxDepth - _depth)
+  {
+    // condition 2.1
+    if (empty(_tree->root->leftChild))
+      return 0;
+
+    // condition 2.2
+    int condition = complete_binary(_tree->root->leftChild, _depth + 1, _maxDepth);
+    if (!condition)
       return 0;
   }
-  return almost_complete_binary(_tree->root->leftChild, _depth + 1,
-                                _maxDepth) &&
-         almost_complete_binary(_tree->root->rightChild, _depth + 1, _maxDepth);
+
+  int left = almost_complete_binary(_tree->root->leftChild, _depth + 1, _maxDepth);
+  int right = almost_complete_binary(_tree->root->rightChild, _depth + 1, _maxDepth);
+
+  return left && right;
 }
 
-int main(void) {
+unsigned two_to_the_power_of(unsigned const _exponent)
+{
+  if (_exponent == 0)
+    return 1;
+  return 2 * two_to_the_power_of(_exponent - 1);
+}
+void print_level_order(Binary_Tree const *const _tree,
+                       unsigned const _totalNumberOfLevels,
+                       unsigned const _allowedDepth, unsigned const _level)
+{
+  if (empty(_tree) && _level != _allowedDepth)
+    return;
+  if (_level > _allowedDepth)
+    return;
+  if (_level == _allowedDepth)
+  {
+    if (empty(_tree))
+    {
+      printf(".");
+      for (unsigned i = 0;
+           i < two_to_the_power_of(_totalNumberOfLevels - _level) - 1; i++)
+        printf(" ");
+      return;
+    }
+    else
+    {
+      printf("%d", _tree->root->data);
+      for (unsigned i = 0;
+           i < two_to_the_power_of(_totalNumberOfLevels - _level) - 1; i++)
+        printf(" ");
+    }
+  }
+  print_level_order(_tree->root->leftChild, _totalNumberOfLevels, _allowedDepth,
+                    _level + 1);
+  print_level_order(_tree->root->rightChild, _totalNumberOfLevels,
+                    _allowedDepth, _level + 1);
+  return;
+}
+
+int main(void)
+{
   Binary_Tree *tree = create_tree();
 
   unsigned choice, nodeID;
   int data;
-  do {
+  do
+  {
     printf("\nNode Count = %u, Leaf Count = %u, Number of Levels = %u\n",
            node_count(tree), leaf_count(tree), number_of_levels(tree));
 
@@ -230,7 +306,8 @@ int main(void) {
     scanf("%u", &choice);
     printf("\n");
 
-    switch (choice) {
+    switch (choice)
+    {
     case 1:
       printf("Enter the data to be inserted: ");
       scanf("%d", &data);
@@ -276,6 +353,20 @@ int main(void) {
     default:
       printf("Invalid choice. Please try again.\n");
       break;
+    }
+
+    // printing the tree
+    printf("\nTree:\n");
+    for (unsigned allowedDepth = 0; allowedDepth < number_of_levels(tree);
+         allowedDepth++)
+    {
+      for (unsigned i = 0;
+           i <
+           two_to_the_power_of(number_of_levels(tree) - allowedDepth - 1) - 1;
+           i++)
+        printf(" ");
+      print_level_order(tree, number_of_levels(tree), allowedDepth, 0);
+      printf("\n");
     }
   } while (choice);
 

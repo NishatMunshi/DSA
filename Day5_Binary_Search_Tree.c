@@ -169,7 +169,7 @@ int balance_factor(Binary_Search_Tree const *const _tree) {
 }
 
 int height_balanced(Binary_Search_Tree const *const _tree) {
-  return abs(balance_factor(_tree)) < 2;
+  return abs(balance_factor(_tree)) < 2 && height_balanced(_tree->root->leftChild) && height_balanced(_tree->root->rightChild);
 }
 
 void print_balance_factors(Binary_Search_Tree const *const _tree) {
@@ -214,7 +214,7 @@ void print_level_order(Binary_Search_Tree const *const _tree,
   return;
 }
 
-void balance_height_by_LL_rotation(Binary_Search_Tree *const _tree) {
+void LL_rotate(Binary_Search_Tree *const _tree) {
   if (balance_factor(_tree) < 2)
     return; // LL rotation can't fix it
 
@@ -226,9 +226,13 @@ void balance_height_by_LL_rotation(Binary_Search_Tree *const _tree) {
   _tree->root = leftChildOfPivot;
   _tree->root->rightChild->root = pivot;
   _tree->root->rightChild->root->leftChild->root = rightChildOfLeftChildOfPivot;
+}
 
+void balance_height_by_LL_rotation(Binary_Search_Tree *const _tree) {
+  if(empty(_tree) || leaf(_tree)) return; // base case 
+  // visit every node, see if it needs balancing
   balance_height_by_LL_rotation(_tree->root->leftChild);
-  balance_height_by_LL_rotation(_tree);
+  LL_rotate(_tree);
   balance_height_by_LL_rotation(_tree->root->rightChild);
 }
 
