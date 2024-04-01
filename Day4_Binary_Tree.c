@@ -87,11 +87,11 @@ void delete_tree(Binary_Tree *const _tree)
 
   // now that children are empty we can free its children and its root and mark
   // it as empty
-  printf("Freeing tree %x\n", _tree->root->leftChild);
+  // printf("Freeing tree %x\n", _tree->root->leftChild);
   free(_tree->root->leftChild);
-  printf("Freeing tree %x\n", _tree->root->rightChild);
+  // printf("Freeing tree %x\n", _tree->root->rightChild);
   free(_tree->root->rightChild);
-  printf("Freeing root id %d\n", _tree->root->id);
+  // printf("Freeing root id %d\n", _tree->root->id);
   free(_tree->root);
   _tree->root = NULL; // mark this tree as empty
 }
@@ -101,7 +101,7 @@ void traverse_pre_order(Binary_Tree const *const _tree)
   if (empty(_tree))
     return;
 
-  printf("Visiting ID %d, data = %d\n", _tree->root->id, _tree->root->data);
+  printf("%d ", _tree->root->id, _tree->root->data);
   traverse_pre_order(_tree->root->leftChild);
   traverse_pre_order(_tree->root->rightChild);
 }
@@ -111,7 +111,7 @@ void traverse_in_order(Binary_Tree const *const _tree)
     return;
 
   traverse_in_order(_tree->root->leftChild);
-  printf("Visiting ID %d, data = %d\n", _tree->root->id, _tree->root->data);
+  printf("%d ", _tree->root->id, _tree->root->data);
   traverse_in_order(_tree->root->rightChild);
 }
 void traverse_post_order(Binary_Tree const *const _tree)
@@ -121,7 +121,7 @@ void traverse_post_order(Binary_Tree const *const _tree)
 
   traverse_post_order(_tree->root->leftChild);
   traverse_post_order(_tree->root->rightChild);
-  printf("Visiting ID %d, data = %d\n", _tree->root->id, _tree->root->data);
+  printf("%d ", _tree->root->id, _tree->root->data);
 }
 
 int insert_element(Binary_Tree *const _tree, int const _data,
@@ -132,7 +132,7 @@ int insert_element(Binary_Tree *const _tree, int const _data,
   if (empty(_tree))
   {
     _tree->root = create_node(_data);
-    printf("Insertion done at level %d\n", _level);
+    // printf("Insertion done at level %d\n", _level);
     insertedInThisLevel = 1; // successful insertion
     return 1;
   }
@@ -161,7 +161,7 @@ int remove_element(Binary_Tree *const _tree, unsigned const _id)
   if (_tree->root->id == _id)
   {
     delete_tree(_tree);
-    printf("Deletion Successful\n");
+    // printf("Deletion Successful\n");
     return 1; // success
   }
 
@@ -290,8 +290,8 @@ int main(void)
   int data;
   do
   {
-    printf("\nNode Count = %u, Leaf Count = %u, Number of Levels = %u\n",
-           node_count(tree), leaf_count(tree), number_of_levels(tree));
+    // printf("\nNode Count = %u, Leaf Count = %u, Number of Levels = %u\n",
+    //        node_count(tree), leaf_count(tree), number_of_levels(tree));
 
     printf("\nMenu:\n");
     printf("1. Insert Element\n");
@@ -300,33 +300,36 @@ int main(void)
     printf("4. Post Order Traversal\n");
     printf("5. Check Type of Binary_Tree\n");
     printf("6. Delete a Subtree\n");
-    printf("0. Exit\n\n");
+    printf("0. Exit\n");
 
     printf("Enter your choice: ");
     scanf("%u", &choice);
-    printf("\n");
+    // printf("\n");
 
     switch (choice)
     {
     case 1:
       printf("Enter the data to be inserted: ");
       scanf("%d", &data);
-      printf("\n");
+      // printf("\n");
       unsigned nextPossibleInsertionDepth = 0; // reset
       while (!insert_element(tree, data, nextPossibleInsertionDepth, 0))
         nextPossibleInsertionDepth++;
       break;
     case 2:
-      printf("\nTraversing Pre Order:\n");
+      printf("Traversing Pre Order: ");
       traverse_pre_order(tree);
+      printf("\n");
       break;
     case 3:
-      printf("\nTraversing In Order:\n");
+      printf("Traversing In Order: ");
       traverse_in_order(tree);
+      printf("\n");
       break;
     case 4:
-      printf("\nTraversing Post Order:\n");
+      printf("Traversing Post Order: ");
       traverse_post_order(tree);
+      printf("\n");
       break;
     case 5:
       printf("Binary_Tree is:\n");
@@ -356,7 +359,7 @@ int main(void)
     }
 
     // printing the tree
-    printf("\nTree:\n");
+    printf("Tree:\n");
     for (unsigned allowedDepth = 0; allowedDepth < number_of_levels(tree);
          allowedDepth++)
     {

@@ -9,7 +9,7 @@ void swap(int *const _a, int *const _b) {
   *_b = temp;
 }
 void displayArray(int *array, int length) {
-  printf("\nArray:\n");
+  printf("Array: ");
   for (unsigned i = 0; i < length; i++)
     printf("%d ", array[i]);
   printf("\n");
@@ -55,43 +55,4 @@ void quick_sort(int *const _array, int const _left, int const _right,
   // recursion
   quick_sort(_array, _left, up - 1, _numberOfComparisons);
   quick_sort(_array, up + 1, _right, _numberOfComparisons);
-}
-int main() {
-  printf("Enter array length: ");
-  int length;
-  scanf("%d", &length);
-  int *array = (int *)malloc(length * sizeof(int));
-  int *array2 = (int *)malloc(length * sizeof(int));
-
-  for (unsigned index = 0; index < length; index++) {
-    printf("Enter array element %d: ", index);
-    int data;
-    scanf("%d", &data);
-    array[index] = data;
-    array2[index] = data;
-  }
-  displayArray(array, length);
-
-  clock_t bubbleBegin = clock();
-  bubble_sort(array, length);
-  clock_t bubbleEnd = clock();
-
-  displayArray(array, length);
-
-  int numberOfComparisons = 0;
-  clock_t quickBegin = clock();
-  quick_sort(array2, 0, length - 1, &numberOfComparisons);
-  clock_t quickEnd = clock();
-
-  printf("\nQuick sort done after %d comparisons\n", numberOfComparisons);
-  displayArray(array2, length);
-
-  double bubbleTime = (double)(bubbleEnd - bubbleBegin);
-  double quickTime = (double)(quickEnd - quickBegin);
-  printf("\nTime for Bubble Sort = %f miliseconds\n", bubbleTime);
-  printf("Time for Quick Sort = %f miliseconds\n", quickTime);
-
-  free(array);
-  free(array2);
-  return 0;
 }

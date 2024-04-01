@@ -10,7 +10,7 @@ typedef struct Heap {
   unsigned size;
 } Heap;
 
-int maximum(int const _a, int const _b) { return _a > _b ? _a : _b; }
+int maximum_heap(int const _a, int const _b) { return _a > _b ? _a : _b; }
 void swap(int *const _a, int *const _b) {
   int temp = *_a;
   *_a = *_b;
@@ -32,7 +32,8 @@ Heap *create_heap(void) {
   return heap;
 }
 
-void insert_element(Heap *const _heap, int const _data) {
+void insert_element_heap(Heap *const _heap, int const _data,
+                    unsigned *const _numberOfComparisons) {
   if (_heap->size == MAX_SIZE - 1) {
     printf("Heap is full\n");
     return;
@@ -41,14 +42,17 @@ void insert_element(Heap *const _heap, int const _data) {
   _heap->items[_heap->size + 1] = _data;
   _heap->size++;
 
+  *(_numberOfComparisons) += 1;
   for (unsigned currentIndex = _heap->size;
        currentIndex > 1 &&
        _heap->items[currentIndex] > _heap->items[parentIndex(currentIndex)];
-       currentIndex = parentIndex(currentIndex))
+       currentIndex = parentIndex(currentIndex)) {
     swap(_heap->items + currentIndex, _heap->items + parentIndex(currentIndex));
+    *(_numberOfComparisons) += 1;
+  }
 }
 
-void display(Heap const *const _heap) {
+void display(Heap *const _heap) {
   if (_heap->size == 0) {
     printf("Heap is empty\n");
     return;
@@ -69,7 +73,7 @@ void display(Heap const *const _heap) {
     printf("\n");
   }
 }
-int remove_element(Heap *const _heap) {
+int remove_element_heap(Heap *const _heap, unsigned *const _numberOFComparisons) {
   if (_heap->size == 0) {
     printf("Heap is empty\n");
     return -1;
@@ -94,14 +98,16 @@ int remove_element(Heap *const _heap) {
     else
       rightChild = _heap->items[rightChildIndex(currentIndex)];
 
-    int maxItem = maximum(thisItem, maximum(leftChild, rightChild));
+    int maxItem = maximum_heap(thisItem, maximum_heap(leftChild, rightChild));
 
+    *(_numberOFComparisons) +=1;
     if (leftChild == maxItem) {
       swap(_heap->items + currentIndex,
            _heap->items + leftChildIndex(currentIndex));
       currentIndex = leftChildIndex(currentIndex);
       continue;
     }
+    *(_numberOFComparisons) +=1;
     if (rightChild == maxItem) {
       swap(_heap->items + currentIndex,
            _heap->items + rightChildIndex(currentIndex));
@@ -112,46 +118,4 @@ int remove_element(Heap *const _heap) {
     break;
   }
   return toReturn;
-}
-
-int main() {
-  Heap *heap = create_heap();
-
-  unsigned choice;
-  int data, removedElement;
-  do {
-    printf("\nMenu:\n");
-    printf("1. Insert Element\n");
-    printf("2. Delete Element\n");
-    printf("0. Exit\n");
-
-    printf("Enter your choice: ");
-    scanf("%u", &choice);
-    // printf("\n");
-
-    switch (choice) {
-    case 1:
-      printf("Enter the data to be inserted: ");
-      scanf("%d", &data);
-      // printf("\n");
-      insert_element(heap, data);
-      display(heap);
-      break;
-    case 2:
-      removedElement = remove_element(heap);
-      if (removedElement == -1)
-        printf("Deletion Failed.\n");
-      else
-        printf("Removed Element = %d\n", removedElement);
-      display(heap);
-      break;
-    case 0:
-      printf("Exiting Program ...\n");
-      break;
-    default:
-      printf("Invalid choice. Please try again.\n");
-      break;
-    }
-  } while (choice != 0);
-  return 0;
 }

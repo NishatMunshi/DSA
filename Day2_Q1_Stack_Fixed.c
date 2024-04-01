@@ -40,13 +40,8 @@ void display(Stack const *const _stack) {
 
 int main() {
     Stack *stack = (Stack *)malloc(sizeof(Stack));
-    int i, choice, value, testCases;
-    scanf("%d", &testCases);
-    for (i = 0; i < testCases; ++i) {
-        printf("#############################\n\t\tTEST CASE "
-               "%d\t\n#############################\n",
-               i + 1);
         initialize(stack);
+    int i, choice, value, testCases;
         do {
             printf("\nMenu:\n");
             printf("1. Push\n");
@@ -55,19 +50,17 @@ int main() {
             printf("4. Exit\n");
             printf("Enter your choice: ");
             scanf("%d", &choice);
-            printf("%d", choice);
             switch (choice) {
             case 1:
-                printf("\nEnter the value to push: ");
+                printf("Enter the value to push: ");
                 scanf("%d", &value);
-                printf("%d", value);
                 push(stack, value);
                 display(stack);
                 break;
             case 2:
                 value = pop(stack);
                 if (value != -9995) 
-                    printf("\nPopped element: %d\n", value);
+                    printf("Popped element: %d\n", value);
                 display(stack);
                 break;
             case 3:
@@ -80,6 +73,5 @@ int main() {
                 printf("\nInvalid choice. Please enter a valid option.\n");
             }
         } while (choice != 4);
-    }
     return 0;
 }

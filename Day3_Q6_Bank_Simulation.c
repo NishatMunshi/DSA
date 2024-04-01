@@ -1,6 +1,6 @@
 #include <stdio.h>
 #include <stdlib.h>
-#define NUMBER_OF_QUEUES 2
+#define NUMBER_OF_QUEUES 3
 typedef struct Node {
   char name;
   unsigned arrivalTime, transactionDuration;
@@ -50,7 +50,7 @@ void print_queue(Queue const *const _queue) {
   for (Node *node = _queue->front->next; node != _queue->rear; node = node->next) {
     printf("%c ", node->name);
   }
-  printf("\n");
+  printf("\n\t");
 }
 
 float simulate_bank(Queue *_queues, Queue const _customers) {
@@ -103,7 +103,7 @@ float simulate_bank(Queue *_queues, Queue const _customers) {
     }
 
     // show the current situaion of the queues
-    printf("\nTime %d:\n", currentTime);
+    printf("\nTime %d:\t", currentTime);
     for (unsigned queueIndex = 0; queueIndex < NUMBER_OF_QUEUES; ++queueIndex) {
       printf("Queue %d: ", queueIndex + 1);
       print_queue(_queues + queueIndex);

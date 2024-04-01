@@ -1,12 +1,12 @@
-#include "heap.h"
-#include "tree.h"
+#include "include/heap.h"
+#include "include/tree.h"
 #include <assert.h>
 #include <stdio.h>
 #include <stdlib.h>
 #include <time.h>
 
 void displayArray(int *array, int length) {
-  printf("\nArray:\n");
+  printf("Array: ");
   for (unsigned i = 0; i < length; i++)
     printf("%d ", array[i]);
   printf("\n\n");
@@ -32,16 +32,17 @@ void tree_sort(int *const _array, unsigned const _length) {
   for (unsigned index = 0; index < _length; index++) {
     insert_element_tree(tree, _array[index], 0, numberOfComparisons);
   }
-  printf("Tree sort done after %u comparisons\nSorted array: ",
+  printf("Tree sort done after %u comparisons\nSorted Array: ",
          *numberOfComparisons);
   traverse_in_order(tree);
+  printf("\n");
 }
 
 void merge(int arr[], int l, int m, int r,
            unsigned *const _numberOfComparisons) {
   int i, j, k;
-  int n1 = m - l + 1;
-  int n2 = r - m;
+  const int n1 = m - l + 1;
+  const int n2 = r - m;
 
   int L[n1], R[n2];
 
@@ -110,12 +111,14 @@ int main() {
   unsigned numberOfComparisons = 0;
   mergeSort(array, 0, length - 1, &numberOfComparisons);
   printf("Merge sort done after %d comparisons\n", numberOfComparisons);
+  printf ("Sorted ");
   displayArray(array, length);
 
   heap_sort(array2, length);
+  printf ("Sorted ");
   displayArray(array2, length);
 
-  tree_sort(array3, length);x
+  tree_sort(array3, length);
 
   free(array);
   free(array2);

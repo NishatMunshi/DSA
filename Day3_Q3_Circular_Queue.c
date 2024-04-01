@@ -1,5 +1,5 @@
 #include <stdio.h>
-#define QUEUESIZE 5
+#define QUEUESIZE 3
 
 typedef struct Queue {
   int items[QUEUESIZE];

@@ -1,6 +1,7 @@
 #include <assert.h>
 #include <stdio.h>
 #include <stdlib.h>
+#include "include/sorting.h"
 
 void generateRandomIntegers(int *array, int length, int maxNum) {
   unsigned char *is_used; /* flags */
@@ -17,14 +18,6 @@ void generateRandomIntegers(int *array, int length, int maxNum) {
     is_used[r] = 1;
   }
 }
-
-void displayArray(int *array, int length) {
-  printf("\nArray:\n");
-  for (unsigned i = 0; i < length; i++)
-    printf("%d ", array[i]);
-  printf("\n");
-}
-
 void linear_search(int const *const _array, int const _length,
                    int const _numberToSearch) {
   unsigned numberOfComparisons = 0;
@@ -36,28 +29,16 @@ void linear_search(int const *const _array, int const _length,
       return;
     }
   }
-  printf("Not found %d\n", _numberToSearch);
+  printf("Linear Search did not find %d\n", _numberToSearch);
 }
 
-void bubble_sort(int *const _array, int const _length) {
-  for (int *i = _array; i < _array + _length; ++i) {
-    for (int *j = _array; j < _array + _length; ++j) {
-      if (*i < *j) {
-        // swap
-        int temp = *j;
-        *j = *i;
-        *i = temp;
-      }
-    }
-  }
-}
 void binary_search(int *const _array, int _length, int const _numberToSearch) {
 
   unsigned leftMarker = 0, rightMarker = _length, numberOfComparisons = 0;
   unsigned midMarker = (leftMarker + rightMarker) / 2;
   while (1) {
     if (_length == 0) {
-      printf("Not found %d\n", _numberToSearch);
+      printf("Binary Search did not find %d\n", _numberToSearch);
       return;
     }
     numberOfComparisons++;
@@ -99,11 +80,11 @@ int main() {
   linear_search(array, length, numberToSearch);
 
   bubble_sort(array, length); // binary search requires sorted array
-  printf("Sorted Array: ");
+  printf("Sorted ");
   displayArray(array, length);
   binary_search(array, length, numberToSearch);
 
-  printf("Enter number to search: ");
+  printf("\nEnter number to search: ");
   scanf("%d", &numberToSearch);
 
   linear_search(array, length, numberToSearch);

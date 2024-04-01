@@ -50,10 +50,10 @@ void display(Stack const *const _stack){
     Node *toDisplay = _stack->top;
     printf("\nStack Elements: ");
     for(unsigned index  = 0; index < _stack->size; ++ index) {
-        printf("%d ", toDisplay->next->data);
+        printf("%d->", toDisplay->next->data);
         toDisplay = toDisplay->next;
     }
-    printf("\n");
+    printf("X\n");
 }
 void cleanup(Stack *const _stack) {
     while(_stack->top != NULL){
@@ -65,16 +65,8 @@ void cleanup(Stack *const _stack) {
 
 int main() {
   Stack stack;
-  int i, choice, value, testCases;
-
-  scanf("%d", &testCases);
-  for (i = 0; i < testCases; ++i) {
-    printf("#############################\n\t\tTEST CASE "
-           "%d\t\n#############################\n",
-           i + 1);
-
     initialize(&stack);
-
+  int i, choice, value, testCases;
     do {
       printf("\nMenu:\n");
       printf("1. Push\n");
@@ -83,20 +75,18 @@ int main() {
       printf("4. Exit\n");
       printf("Enter your choice: ");
       scanf("%d", &choice);
-      printf("%d", choice);
 
       switch (choice) {
       case 1:
-        printf("\nEnter the value to push: ");
+        printf("Enter the value to push: ");
         scanf("%d", &value);
-        printf("%d", value);
         push(&stack, value);
         display(&stack);
         break;
       case 2:
         value = pop(&stack);
         if (value != -9995) {
-          printf("\nPopped element: %d\n", value);
+          printf("Popped element: %d\n", value);
         }
         display(&stack);
         break;
@@ -111,7 +101,6 @@ int main() {
       }
     } while (choice != 4);
     cleanup(&stack);
-  }
 
   return 0;
 }

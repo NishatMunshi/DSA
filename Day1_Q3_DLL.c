@@ -111,21 +111,17 @@ void display(LinkedList const *const _list) {
         Node *temp = _list->head;
         for (unsigned index = 0; index < _list->size; ++index) {
             temp = temp->next;
-            printf("%d ", temp->data);
+            printf("%d<->", temp->data);
         }
-        printf("\n");
+        printf("X\n");
     }
 }
 
 // Main function
 int main() {
     LinkedList list;
-    int i, choice, data, position, testCases;
-    scanf("%d", &testCases);
-    for (i = 0; i < testCases; i++) {
-        printf("\n######################\nTEST CASE %d\n######################\n",
-               i + 1);
         initLinkedList(&list);
+    int i, choice, data, position, testCases;
         do {
             printf("\nMenu:\n");
             printf("1. Add at beginning\n");
@@ -137,29 +133,24 @@ int main() {
             printf("0. Quit\n");
             printf("Enter your choice: ");
             scanf("%d", &choice);
-            printf("%d", choice);
             switch (choice) {
             case 1:
-                printf("\nEnter data: ");
+                printf("Enter data: ");
                 scanf("%d", &data);
-                printf("%d", data);
                 addAtBeginning(&list, data);
                 display(&list);
                 break;
             case 2:
-                printf("\nEnter data: ");
+                printf("Enter data: ");
                 scanf("%d", &data);
-                printf("%d", data);
-                printf("\nEnter position: ");
+                printf("Enter position: ");
                 scanf("%d", &position);
-                printf("%d", position);
                 addAtPosition(&list, data, position);
                 display(&list);
                 break;
             case 3:
-                printf("\nEnter data: ");
+                printf("Enter data: ");
                 scanf("%d", &data);
-                printf("%d", data);
                 addAtEnd(&list, data);
                 display(&list);
                 break;
@@ -168,9 +159,8 @@ int main() {
                 display(&list);
                 break;
             case 5:
-                printf("\nEnter position: ");
+                printf("Enter position: ");
                 scanf("%d", &position);
-                printf("%d", position);
                 deleteAtPosition(&list, position);
                 display(&list);
                 break;
@@ -186,6 +176,5 @@ int main() {
                 printf("\nInvalid choice. Please try again.\n");
             }
         } while (choice != 0);
-    }
     return 0;
 }

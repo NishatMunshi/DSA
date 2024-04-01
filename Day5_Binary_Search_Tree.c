@@ -73,7 +73,7 @@ int insert_element(Binary_Search_Tree *const _tree, int const _data,
   // try to insert in this level
   if (empty(_tree)) {
     _tree->root = create_node(_data);
-    printf("Insertion done at level %d\n", _level);
+    // printf("Insertion done at level %d\n", _level);
     return 1;
   }
 
@@ -96,8 +96,8 @@ int remove_element(Binary_Search_Tree *const _tree, int const _data,
   if (_data == _tree->root->data) {
     if (leaf(_tree)) {
       // free its empty subtree wrappers
-      free(_tree->root->leftChild);
-      free(_tree->root->rightChild);
+      // free(_tree->root->leftChild);
+      // free(_tree->root->rightChild);
 
       printf("Deleting Node data %d at level %d\n", _tree->root->data, _level);
       // make this tree empty
@@ -248,23 +248,23 @@ int main(void) {
     printf("3. Print Balance Factor\n");
     printf("4. Traverse In Order\n");
     printf("5. Balance by LL rotation\n");
-    printf("0. Exit\n\n");
+    printf("0. Exit\n");
 
     printf("Enter your choice: ");
     scanf("%u", &choice);
-    printf("\n");
+    // printf("\n");
 
     switch (choice) {
     case 1:
       printf("Enter the data to be inserted: ");
       scanf("%d", &data);
-      printf("\n");
+      // printf("\n");
       insert_element(tree, data, 0);
       break;
     case 2:
       printf("Enter the data to be deleted: ");
       scanf("%d", &data);
-      printf("\n");
+      // printf("\n");
       if (!remove_element(tree, data, 0))
         printf("Deletion Failed.\n");
       break;
@@ -275,7 +275,7 @@ int main(void) {
       printf("balanced\n");
       break;
     case 4:
-      printf("\nTraversing In Order:\n");
+      printf("Traversing In Order:\n");
       traverse_in_order(tree);
       break;
     case 5:
@@ -290,7 +290,7 @@ int main(void) {
     }
 
     // printing the tree
-    printf("\nTree:\n");
+    printf("Tree:\n");
     for (unsigned allowedDepth = 0; allowedDepth < number_of_levels(tree);
          allowedDepth++) {
       for (unsigned i = 0;

@@ -9,17 +9,17 @@ int main() {
     printf("\nMenu:\n");
     printf("1. Insert Element\n");
     printf("2. Delete Element\n");
-    printf("0. Exit\n\n");
+    printf("0. Exit\n");
 
     printf("Enter your choice: ");
     scanf("%u", &choice);
-    printf("\n");
+    // printf("\n");
 
     switch (choice) {
     case 1:
       printf("Enter the data to be inserted: ");
       scanf("%d", &data);
-      printf("\n");
+      // printf("\n");
       insert_element(priorityQueue, data);
       break;
     case 2:

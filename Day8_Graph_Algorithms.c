@@ -27,7 +27,7 @@ void BFS(int graph[NUMBER_OF_VERTICES_BFS][NUMBER_OF_VERTICES_BFS], int start) {
   parent[start] = -1;    // Start node has no parent
   queue[rear++] = start; // Enqueue start node
 
-  printf("Visited\tQueue\t\tColor\t\t\t\t\t\t\tDistance\n");
+  printf("Visited Node\tQueue\t\t\tColor Array\t\t\t\tDistance Array\n");
 
   while (front != rear) {
     // Deque front node
@@ -97,7 +97,7 @@ void DFS(int graph[NUMBER_OF_VERTICES_DFS][NUMBER_OF_VERTICES_DFS], int start) {
   discovery_time[start] = ++time;
   stack[++top] = start;
 
-  printf("Visited\tStack\t\tColor\t\t\t\tDiscovery\t\t\tFinish\n");
+  printf("Visited Node\tStack\t\t\tColor Array\t\tDiscovery Time\t\tFinish Time\n");
 
   while (top != -1) {
     int visitingNode = stack[top];
@@ -179,7 +179,7 @@ int main() {
   graph[5][7] = graph[7][5] = 1;
   graph[6][7] = graph[7][6] = 1;
 
-  printf("Graph created.\n\n");
+  printf("Graph created.\n");
   printf("Starting BFS from node 0:\n\n");
   BFS(graph, 0);
 
@@ -196,7 +196,7 @@ int main() {
   graph2[2][1] = 1;
   graph2[3][2] = 1;
 
-  printf("\n\nGraph 2 created.\n\n");
+  printf("\n\nGraph 2 created.\n");
   printf("Starting DFS from node 0:\n\n");
   DFS(graph2, 0);
 
