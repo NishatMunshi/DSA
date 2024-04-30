@@ -4,6 +4,7 @@
         "stdlib.h": "c",
         "singly_linked_list.h": "c",
         "tower_of_hanoi.h": "c",
-        "sorting.h": "c"
+        "sorting.h": "c",
+        "cstdbool": "c"
     }
 }
