@@ -209,6 +209,20 @@ int complete_binary(Binary_Tree const *const _tree, unsigned const _depth,
   return complete_binary(_tree->root->leftChild, _depth + 1, _maxDepth) &&
          complete_binary(_tree->root->rightChild, _depth + 1, _maxDepth);
 }
+
+int condition2_2(Binary_Tree const *const _tree, unsigned const _depth,
+                 unsigned const _maxDepth)
+{
+  if (_depth == _maxDepth)
+  {
+    return leaf(_tree->root);
+  }
+
+  if ((empty(_tree->root->leftChild) || empty(_tree->root->rightChild)))
+    return 0;
+
+  return condition2_2(_tree->root->leftChild, _depth + 1, _maxDepth) && condition2_2(_tree->root->rightChild, _depth + 1, _maxDepth);
+}
 int almost_complete_binary(Binary_Tree const *const _tree, unsigned const _depth,
                            unsigned const _maxDepth)
 {
@@ -225,14 +239,14 @@ int almost_complete_binary(Binary_Tree const *const _tree, unsigned const _depth
     return 0;
 
   // condition  2
-  if (_depth!= _maxDepth && number_of_levels(_tree->root->rightChild) == _maxDepth - _depth)
+  if (_depth != _maxDepth && number_of_levels(_tree->root->rightChild) == _maxDepth - _depth)
   {
     // condition 2.1
     if (empty(_tree->root->leftChild))
       return 0;
 
     // condition 2.2
-    int condition = complete_binary(_tree->root->leftChild, _depth + 1, _maxDepth);
+    int condition = condition2_2(_tree->root->leftChild, _depth + 1, _maxDepth);
     if (!condition)
       return 0;
   }
