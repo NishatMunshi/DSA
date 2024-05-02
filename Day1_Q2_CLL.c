@@ -39,19 +39,14 @@ void destroyLinkedList(LinkedList *const _list)
 }
 
 // General function to add a node before any given position
-void addAtPosition(LinkedList *const _list, int const _data, size_t _position)
+void addAtPosition(LinkedList *const _list, int const _data, int _position)
 {
-
     // position < 1 or position > size+1 is valid.
     // We just have to decode it
-    while (_position < 1)
-    {
-        _position = _position + _list->size;
-    }
-    while (_position > _list->size + 1)
-    {
-        _position = _position - _list->size;
-    }
+    if (_list->size == 0)
+        _position = 1;
+    else
+        _position = (_position % _list->size) + 1; // 1 based index
 
     Node *prev = _list->head;
     for (size_t pos = 1; pos < _position; ++pos)
