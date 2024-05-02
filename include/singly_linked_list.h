@@ -50,8 +50,9 @@ void display(Singly_Linked_List const *const _list)
     for (size_t index = 0; index < _list->size; ++index)
     {
         node = node->next;
-        printf("%d ", node->data);
+        printf("%c ", node->data);
     }
+    printf("\n");
 }
 
 void remove_elem(Singly_Linked_List *const _list, size_t const _position)
@@ -68,4 +69,16 @@ void remove_elem(Singly_Linked_List *const _list, size_t const _position)
     prev->next = next;
 
     --_list->size;
+}
+
+int *at(Singly_Linked_List * const _list, unsigned const _index ){
+    assert(_index < _list->size);
+
+    Node *node = _list->head;
+
+    for (size_t index = 0; index < _index; ++index)
+    {
+        node = node->next;
+    }
+    return &(node->next->data);
 }

@@ -79,6 +79,8 @@ int balance_factor(Binary_Search_Tree const *const _tree)
 {
 	if (empty(_tree) || leaf(_tree))
 		return 0;
+
+	// these have to be integer ( so that their difference can be negative )
 	int heightOfLeftChild = number_of_levels(_tree->root->leftChild);
 	int heightOfRightChild = number_of_levels(_tree->root->rightChild);
 
@@ -87,7 +89,8 @@ int balance_factor(Binary_Search_Tree const *const _tree)
 
 int height_balanced(Binary_Search_Tree const *const _tree)
 {
-	if(empty(_tree)) return 1;
+	if (empty(_tree))
+		return 1;
 	return abs(balance_factor(_tree)) < 2 && height_balanced(_tree->root->leftChild) && height_balanced(_tree->root->rightChild);
 }
 
@@ -95,6 +98,8 @@ void print_balance_factors(Binary_Search_Tree const *const _tree)
 {
 	if (empty(_tree))
 		return;
+
+	// inorder print
 	print_balance_factors(_tree->root->leftChild);
 	printf("Node data %d, balance factor = %d\n", _tree->root->data,
 		   balance_factor(_tree));
@@ -248,6 +253,7 @@ int remove_element(Binary_Search_Tree *const _tree, int const _data,
 		remove_element(_tree->root->rightChild, nodeToCopyFrom->data, _level + 1);
 		return 1;
 	}
+
 	if (_data < _tree->root->data)
 	{
 		int removedFromLeftChild = remove_element(_tree->root->leftChild, _data, _level + 1);
@@ -256,6 +262,7 @@ int remove_element(Binary_Search_Tree *const _tree, int const _data,
 		RL_rotate(_tree);
 		return removedFromLeftChild;
 	}
+	// if deleted from rightchild
 	else
 	{
 		int removedFromRightChild = remove_element(_tree->root->rightChild, _data, _level + 1);
@@ -272,7 +279,7 @@ void traverse_in_order(Binary_Search_Tree const *const _tree)
 		return;
 
 	traverse_in_order(_tree->root->leftChild);
-	printf("Visiting data = %d\n", _tree->root->data);
+	printf("%d ", _tree->root->data);
 	traverse_in_order(_tree->root->rightChild);
 }
 
