@@ -2,7 +2,7 @@
 
 #include <stdlib.h> // for malloc
 #include <assert.h> // for assert
-#include <stdio.h>
+#include <stdio.h>  // for printf
 
 typedef struct Fixed_Memory_Stack
 {

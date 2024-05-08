@@ -1,12 +1,23 @@
-#include "include/postfix_evaluation.h"
+#include "include/linked_list_queue.h"
 
 int main()
 {
-    char *string = "6 2 3 + - 3 8 2 / + 2 ^ 3 + -";
+    Linked_List_Queue *queue = llqueue_create_queue();
 
-    int answer = evaulate_postfix(string);
+    for (unsigned i = 0; i < 10; ++i)
+        llqueue_push(queue, i);
 
-    printf("%d", answer);
+    llqueue_display(queue);
+
+    for (unsigned i = 0; i < 9; ++i)
+        printf("%d ", llqueue_pop(queue));
+
+    llqueue_display(queue);
+
+    for (unsigned i = 0; i < 20; ++i)
+        llqueue_push(queue, i);
+
+    llqueue_display(queue);
 
     return 0;
 }
