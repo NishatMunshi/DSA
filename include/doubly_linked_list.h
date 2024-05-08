@@ -1,91 +1,120 @@
-#pragma once 
+#pragma once
 
-#include <stdlib.h>
-#include <assert.h>
-#include <stdio.h>
+#include <stdlib.h> // for malloc
+#include <assert.h> // for assert
+#include <stdio.h>  // for printf
 
-typedef struct Node
+typedef struct DLL_Node
 {
     int data;
-    struct Node *prev, *next;
-} Node;
+    struct DLL_Node *prev;
+    struct DLL_Node *next;
+} DLL_Node;
 
 typedef struct Doubly_Linked_List
 {
-    Node *head, *tail;
+    DLL_Node *head;
     size_t size;
 } Doubly_Linked_List;
 
-void init_list(Doubly_Linked_List *const _list)
+DLL_Node *dll_create_node(int const _data)
 {
-    _list->head = (Node *)malloc(sizeof(Node));
-    _list->tail = (Node *)malloc(sizeof(Node));
+    DLL_Node *node = (DLL_Node *)malloc(sizeof(DLL_Node));
 
-    _list->head->prev = NULL;
-    _list->head->next = _list->tail;
-    _list->tail->prev = _list->head;
-    _list->tail->next = NULL;
+    node->data = _data;
+    node->prev = NULL;
+    node->next = NULL;
 
-    _list->size = 0;
+    return node;
 }
 
-void add_before(Doubly_Linked_List *const _list, size_t const _position, int const _data)
+// creates an empty list
+Doubly_Linked_List *dll_create_list(void)
 {
-    assert(_list->size >= _position);
+    Doubly_Linked_List *list = (Doubly_Linked_List *)malloc(sizeof(Doubly_Linked_List));
 
-    Node *prev = _list->head;
-    for (size_t index = 0; index < _position; ++index)
+    list->head = dll_create_node(INT_MIN);
+
+    list->head->prev = NULL;
+    list->head->next = dll_create_node(INT_MIN);
+
+    list->head->next->prev = list->head;
+    list->head->next->next = NULL;
+
+    list->size = 0;
+
+    return list;
+}
+
+// adds before the given index so that new node is now at the given index
+void dll_add_before(Doubly_Linked_List *const _list, size_t const _index, int const _data)
+{
+    assert(_index <= _list->size);
+
+    // traverse to the position
+    DLL_Node *prevNode = _list->head;
+    for (size_t index = 0; index < _index; ++index)
     {
-        prev = prev->next;
+        prevNode = prevNode->next;
     }
-    Node *next = prev->next;
+    DLL_Node *nextNode = prevNode->next;
+    DLL_Node *newNode = dll_create_node(_data);
 
-    Node *newNode = (Node *)malloc(sizeof(Node));
-    newNode->data = _data;
-
-    prev->next = newNode;
-    newNode->prev = prev;
-    newNode->next = next;
-    next->prev = newNode;
+    // create the new links
+    prevNode->next = newNode;
+    newNode->prev = prevNode;
+    newNode->next = nextNode;
+    nextNode->prev = newNode;
 
     ++_list->size;
 }
 
-void display(Doubly_Linked_List const *const _list)
+// removes a node from the given index
+int dll_remove(Doubly_Linked_List *const _list, size_t const _index)
 {
-    Node *node = _list->head;
-    for (size_t index = 0; index < _list->size; ++index)
+    assert(_index < _list->size);
+
+    // traverse to the position
+    DLL_Node *prevNode = _list->head;
+    for (size_t index = 0; index < _index; ++index)
     {
-        node = node->next;
-        printf("%d ", node->data);
+        prevNode = prevNode->next;
     }
-}
+    DLL_Node *nextNode = prevNode->next->next;
 
-
-void remove_elem(Doubly_Linked_List *const _list, size_t const _position)
-{
-    assert(_list->size > _position);
-
-    Node *prev = _list->head;
-    for (size_t index = 0; index < _position; ++index)
-    {
-        prev= prev->next;
-    }
-    Node *next = prev->next->next;
-    free(prev->next);
-
-    prev->next = next;
-    next->prev = prev;
+    int returnValue = prevNode->next->data;
+    free(prevNode->next);
+    
+    // create the new links
+    prevNode->next = nextNode;
+    nextNode->prev = prevNode;
 
     --_list->size;
+
+    return returnValue;
 }
 
-void display_reverse(Doubly_Linked_List const * const _list)
+// returns a pointer to the data element at the given index
+int *dll_at(Doubly_Linked_List *const _list, size_t const _index)
 {
-    Node *node = _list->tail;
-    for (size_t index = 0; index < _list->size; ++index)
+    assert(_index < _list->size);
+
+    // traverse to the position
+    DLL_Node *prevNode = _list->head;
+    for (size_t index = 0; index < _index; ++index)
     {
-        node = node->prev;
+        prevNode = prevNode->next;
+    }
+    return &(prevNode->next->data);
+}
+
+// displays the list in one line
+void dll_display(Doubly_Linked_List const *const _list)
+{
+    printf("Doubly Linked List: ");
+    for (DLL_Node *node = _list->head->next; node->next != NULL; node = node->next)
+    {
         printf("%d ", node->data);
     }
+    printf("\n");
 }

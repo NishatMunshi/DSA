@@ -16,7 +16,7 @@ typedef struct Binary_Search_Tree
 
 // checks if a tree is empty (ie its root is NULL)
 int empty(Binary_Search_Tree const *const _tree) { return _tree->root == NULL; }
-// checks if a on empty tree is a leaf or not
+// checks if a non empty tree is a leaf or not
 int leaf(Binary_Search_Tree const *const _tree)
 {
 	if (empty(_tree))
@@ -149,49 +149,29 @@ void RL_rotate(Binary_Search_Tree *const _tree)
 		RR_rotate(_tree);
 	}
 }
-#define LEFTCHILD -1
-#define RIGHTCHILD 1
-int insert_element(Binary_Search_Tree *const _tree, int const _data, int const I_am,
-				   unsigned const _level)
+void insert_element(Binary_Search_Tree *const _tree, int const _data,
+					unsigned const _level)
 {
 	// try to insert in this level
 	if (empty(_tree))
 	{
 		_tree->root = create_node(_data);
 		// printf("Insertion done at level %d\n", _level);
-		return I_am;
+		return;
 	}
 
-	// try to insert in left child
-	int insertedInLeftChild = 0;
 	if (_data < _tree->root->data)
-		insertedInLeftChild = insert_element(_tree->root->leftChild, _data, LEFTCHILD, _level + 1);
-	if (insertedInLeftChild == LEFTCHILD)
 	{
+		insert_element(_tree->root->leftChild, _data, _level + 1);
 		LL_rotate(_tree);
-		return LEFTCHILD;
-	}
-	if (insertedInLeftChild == RIGHTCHILD)
-	{
 		LR_rotate(_tree);
-		return LEFTCHILD;
 	}
-
-	// if failed, try to insert in right child
-	int insertedInRightChild = 0;
-	if (_data >= _tree->root->data)
-		insertedInRightChild = insert_element(_tree->root->rightChild, _data, RIGHTCHILD, _level + 1);
-	if (insertedInRightChild == LEFTCHILD)
+	else
 	{
-		RL_rotate(_tree);
-		return RIGHTCHILD;
-	}
-	if (insertedInRightChild == RIGHTCHILD)
-	{
+		insert_element(_tree->root->rightChild, _data, _level + 1);
 		RR_rotate(_tree);
-		return RIGHTCHILD;
+		RL_rotate(_tree);
 	}
-	return INT_MIN;
 }
 
 int remove_element(Binary_Search_Tree *const _tree, int const _data,
@@ -347,7 +327,7 @@ int main(void)
 			printf("Enter the data to be inserted: ");
 			scanf("%d", &data);
 			// printf("\n");
-			insert_element(tree, data, 0, 0);
+			insert_element(tree, data, 0);
 			break;
 		case 2:
 			printf("Enter the data to be deleted: ");

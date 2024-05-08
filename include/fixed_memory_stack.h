@@ -1,48 +1,49 @@
+#pragma once
+
+#include <stdlib.h> // for malloc
+#include <assert.h> // for assert
 #include <stdio.h>
-#include <stdlib.h>
-#define STACKSIZE 100
 
-typedef struct Stack
+typedef struct Fixed_Memory_Stack
 {
-    int elements[STACKSIZE];
-    int topPos;
-} Stack;
+    int *items;
+    size_t top; // one after the top
+    size_t capacity;
+} Fixed_Memory_Stack;
 
-void init_stack(Stack *const _stack)
+Fixed_Memory_Stack *fmstack_create_stack(size_t const _maxSize)
 {
-    _stack->topPos = 0;
+    Fixed_Memory_Stack *stack = (Fixed_Memory_Stack *)malloc(sizeof(Fixed_Memory_Stack));
+
+    stack->items = (int *)malloc(_maxSize * sizeof(int));
+    stack->capacity = _maxSize;
+    stack->top = 0;
+
+    return stack;
 }
-void stack_push(Stack *const _stack, int const _data)
+
+void fmstack_push(Fixed_Memory_Stack *const _stack, int const _data)
 {
     // check overflow
-    if (_stack->topPos > STACKSIZE){
-        printf("Overlow Error!\n");
-        exit(1);
-    }
+    assert(_stack->top < _stack->capacity);
 
-    _stack->elements[_stack->topPos++] = _data;
+    _stack->items[_stack->top++] = _data;
 }
 
-void print_stack(Stack const *const _stack){
-    if(_stack->topPos == 0){
-        printf("Empty Stack\n");
-        return;
-    }
-    printf("\nStack Elements:\n");
-    for(unsigned index = 0; index < _stack->topPos;++index){
-        printf("%d ", _stack->elements[index]);
+int fmstack_pop(Fixed_Memory_Stack *const _stack)
+{
+    // check underflow
+    assert(_stack->top > 0);
+
+    return _stack->items[--_stack->top];
+}
+
+void fmstack_display(Fixed_Memory_Stack const *const _stack)
+{
+    printf("Fixed Memory Stack: ");
+    for (unsigned index = 0; index < _stack->top; ++index)
+    {
+        printf("%d ", _stack->items[index]);
     }
     printf("\n");
-}
-
-int stack_pop(Stack *const _stack)
-{
-    // check overflow
-    if (_stack->topPos == 0){
-        printf("Overlow Error!\n");
-        exit(1);
-    }
-
-    int returnValue  = _stack->elements[--_stack->topPos];
-    return returnValue;
 }

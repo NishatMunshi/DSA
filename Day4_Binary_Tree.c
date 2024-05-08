@@ -1,5 +1,6 @@
 #include <stdio.h>
 #include <stdlib.h>
+#include "include/queue.h"
 
 struct Binary_Tree;
 typedef struct Node
@@ -152,6 +153,26 @@ int insert_element(Binary_Tree *const _tree, int const _data,
   return insert_element(_tree->root->rightChild, _data, _allowedDepth - 1,
                         _level + 1);
 }
+
+void insert_element_queue(Binary_Tree *const _tree, int const _data)
+{
+  Queue *queue = (Queue *)malloc(sizeof(Queue));
+  initialize(queue);
+  queue_insert_element(queue, _tree);
+
+  while (queue->size > 0)
+  {
+    Binary_Tree *tree = queue_remove_element(queue);
+    if (empty(tree))
+    {
+      tree->root = create_node(_data);
+      return;
+    }
+
+    queue_insert_element(queue, tree->root->leftChild);
+    queue_insert_element(queue, tree->root->rightChild);
+  }
+}
 int remove_element(Binary_Tree *const _tree, unsigned const _id)
 {
   if (empty(_tree))
@@ -182,10 +203,8 @@ int strictly_binary(Binary_Tree const *const _tree)
   if (leaf(_tree->root))
     return 1;
 
-  // non leaf nodes should not have exactly 1 non empty subtree
-  if (empty(_tree->root->leftChild) && !empty(_tree->root->rightChild))
-    return 0;
-  if (!empty(_tree->root->leftChild) && empty(_tree->root->rightChild))
+  // non leaf nodes must have both children
+  if (empty(_tree->root->leftChild) || empty(_tree->root->rightChild))
     return 0;
 
   return strictly_binary(_tree->root->leftChild) &&
@@ -210,14 +229,19 @@ int complete_binary(Binary_Tree const *const _tree, unsigned const _depth,
          complete_binary(_tree->root->rightChild, _depth + 1, _maxDepth);
 }
 
-int condition2_2(Binary_Tree const *const _tree, unsigned const _depth,
+// called on leftChild of every node
+int condition2_2(Binary_Tree const *const _tree,
+                 unsigned const _depth,
                  unsigned const _maxDepth)
 {
-  if (_depth == _maxDepth)
+  // check if we are a leaf
+  if (leaf(_tree->root))
   {
-    return leaf(_tree->root);
+    // if we are then we must be at the deepest level
+    return _depth == _maxDepth;
   }
 
+  // if we are not a leaf then we must have 2 children
   if ((empty(_tree->root->leftChild) || empty(_tree->root->rightChild)))
     return 0;
 
@@ -326,10 +350,13 @@ int main(void)
       printf("Enter the data to be inserted: ");
       scanf("%d", &data);
       // printf("\n");
-      unsigned nextPossibleInsertionDepth = 0; // reset
-      while (!insert_element(tree, data, nextPossibleInsertionDepth, 0))
-        nextPossibleInsertionDepth++;
+      // unsigned nextPossibleInsertionDepth = 0; // reset
+      // while (!insert_element(tree, data, nextPossibleInsertionDepth, 0))
+      //   nextPossibleInsertionDepth++;
+
+      insert_element_queue(tree, data);
       break;
+
     case 2:
       printf("Traversing Pre Order: ");
       traverse_pre_order(tree);
