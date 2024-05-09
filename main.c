@@ -1,23 +1,23 @@
-#include "include/linked_list_queue.h"
+#include "include/max_heap.h"
+
+#include <stdio.h>
 
 int main()
 {
-    Linked_List_Queue *queue = llqueue_create_queue();
+    Max_Heap *heap = maxheap_create_heap(100);
 
-    for (unsigned i = 0; i < 10; ++i)
-        llqueue_push(queue, i);
+    for (unsigned n = 0; n < 10; ++n)
+    {
+        maxheap_insert(heap, n);
+    }
 
-    llqueue_display(queue);
-
-    for (unsigned i = 0; i < 9; ++i)
-        printf("%d ", llqueue_pop(queue));
-
-    llqueue_display(queue);
-
-    for (unsigned i = 0; i < 20; ++i)
-        llqueue_push(queue, i);
-
-    llqueue_display(queue);
+    for (unsigned n = 0; n < 7; ++n)
+    {
+        printf("\n");
+        maxheap_remove(heap);
+        maxheap_display(heap);
+    }
+    printf("\n");
 
     return 0;
 }
