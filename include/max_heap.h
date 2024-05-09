@@ -74,7 +74,7 @@ int maxheap_remove(Max_Heap *const _heap)
 
   // fix heap structure
   for (size_t currentIndex = 1, leftChildIndex = 2 * currentIndex, rightChildIndex = 2 * currentIndex + 1;
-       leftChildIndex <= _heap->size && rightChildIndex <= _heap->size;
+       leftChildIndex <= _heap->capacity && rightChildIndex <= _heap->capacity; /*avoiding seg fault*/
        leftChildIndex = 2 * currentIndex, rightChildIndex = 2 * currentIndex + 1)
   {
     int const largest = __max(_heap->items[currentIndex],

@@ -1,30 +1,34 @@
 #pragma once
+
 #include "sorting.h"
 
-unsigned linear_search(int const *const _array, unsigned const _length, int const _numberToSearch)
+size_t linear_search(int const *const _array, size_t const _length, int const _numberToSearch)
 {
-    for (unsigned index = 0; index < _length; ++index)
+    for (size_t index = 0; index < _length; ++index)
     {
         if (_array[index] == _numberToSearch)
             return index;
     }
-    return -1;
+    return SIZE_MAX;
 }
 
-//sorted array assumed
-// indices have to be int for edge case checking
-unsigned binary_search(int *const _array, int const _leftIndex, int const _rightIndex, int const _numberToSearch)
+// sorted array assumed
+size_t binary_search(int const *const _array, size_t const _leftIndex, size_t const _rightIndex, int const _numberToSearch)
 {
-    int const middleIndex = (_leftIndex + _rightIndex) / 2;
+    size_t const middleIndex = (_leftIndex + _rightIndex) / 2;
 
     if (_array[middleIndex] == _numberToSearch)
+    {
         return middleIndex;
+    }
 
-    if (_leftIndex >= _rightIndex)
-        return -1;
-
-    if (_numberToSearch < _array[middleIndex])
+    if (_numberToSearch < _array[middleIndex] && middleIndex > _leftIndex)
+    {
         return binary_search(_array, _leftIndex, middleIndex - 1, _numberToSearch);
-
-    return binary_search(_array, middleIndex + 1, _rightIndex, _numberToSearch);
+    }
+    else if (_numberToSearch > _array[middleIndex] && middleIndex < _rightIndex)
+    {
+        return binary_search(_array, middleIndex + 1, _rightIndex, _numberToSearch);
+    }
+    return SIZE_MAX;
 }
