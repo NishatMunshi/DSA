@@ -1,8 +1,8 @@
 #include "../include/sorting.h"
 
 #include <stdbool.h>
-#include <stdlib.h>
 #include <stdio.h>
+#include <stdlib.h>
 
 #include "../include/heap_min.h"
 
@@ -95,7 +95,45 @@ void quick_sort(int *array, size_t length) {
     quick_sort_recursive(array, 0, length - 1);
 }
 
-void merge_sort_recursive(int *array, size_t low, size_t high) {
+static void merge_no_extra_space(int *array1, int *array2, size_t len1, size_t len2) {
+    for (size_t i = 0; i < len1; ++i) {
+        if (array1[i] > array2[0]) {
+            sorting_swap(array1 + i, array2 + 0);
+            for (size_t j = 0; j < len2 - 1 && array2[j] > array2[j + 1]; ++j) {
+                sorting_swap(array2 + j, array2 + j + 1);
+            }
+        }
+    }
+}
+
+static void merge(int *array1, int *array2, size_t len1, size_t len2) {
+    int *merged_array = calloc(len1 + len2, sizeof(array1[0]));
+    size_t array1_index = 0, array2_index = 0;
+    size_t merged_array_index = 0;
+
+    // take in as many elements as possible until one array is depleted
+    while (array1_index < len1 && array2_index < len2) {
+        if (array1[array1_index] < array2[array2_index])
+            merged_array[merged_array_index++] = array1[array1_index++];
+        else
+            merged_array[merged_array_index++] = array2[array2_index++];
+    }
+
+    // take in the rest of the elements ( if there are any )
+    while (array1_index < len1)
+        merged_array[merged_array_index++] = array1[array1_index++];
+
+    while (array2_index < len2)
+        merged_array[merged_array_index++] = array2[array2_index++];
+
+    // copy merged array over to array1
+    for (size_t index = 0; index < len1 + len2; ++index)
+        array1[index] = merged_array[index];
+
+    free(merged_array);
+}
+
+static void merge_sort_recursive(int *array, size_t low, size_t high) {
     size_t length = high + 1 - low;
     if (length <= 1) {
         return;
@@ -107,31 +145,8 @@ void merge_sort_recursive(int *array, size_t low, size_t high) {
 
     // merging
     int *array1 = array + low, *array2 = array + low + length / 2;
-    size_t length1 = length / 2, length2 = high + 1 - length / 2 - low;
-    size_t array1Index = 0, array2Index = 0;
-    int *mergedArray = (int *)calloc(length1 + length2, sizeof(int));
-    size_t mergedArrayIndex = 0;
-
-    // take in as many elements as possible until one array is depleted
-    while (array1Index < length1 && array2Index < length2) {
-        if (array1[array1Index] < array2[array2Index])
-            mergedArray[mergedArrayIndex++] = array1[array1Index++];
-        else
-            mergedArray[mergedArrayIndex++] = array2[array2Index++];
-    }
-
-    // take in the rest of the elements ( if there are any )
-    while (array1Index < length1)
-        mergedArray[mergedArrayIndex++] = array1[array1Index++];
-
-    while (array2Index < length2)
-        mergedArray[mergedArrayIndex++] = array2[array2Index++];
-
-    // copy merged array over to array1
-    for (size_t index = 0; index < length1 + length2; ++index)
-        array1[index] = mergedArray[index];
-
-    free(mergedArray);
+    size_t len1 = length / 2, len2 = high + 1 - length / 2 - low;
+    merge(array1, array2, len1, len2);
 }
 
 void merge_sort(int *array, size_t length) {
