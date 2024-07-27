@@ -9,5 +9,6 @@ void heap_sort(int *array, size_t length);
 void insetion_sort(int *array, size_t length);
 void quick_sort(int *array, size_t length);
 void merge_sort(int *array, size_t length);
+void tree_sort(int *array, size_t length);
 
 #endif // DSA_SORTING_H

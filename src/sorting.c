@@ -4,15 +4,16 @@
 #include <stdio.h>
 #include <stdlib.h>
 
+#include "../include/avl_tree.h"
 #include "../include/heap_min.h"
 
-static void sorting_swap(int *a, int *b) {
+static void sorting_swap(int* a, int* b) {
     int c = *a;
     *a = *b;
     *b = c;
 }
 
-void bubble_sort(int *array, size_t length) {
+void bubble_sort(int* array, size_t length) {
     bool swapped = true;
     for (size_t i = 0; i < length && swapped; ++i) {
         swapped = false;
@@ -25,7 +26,7 @@ void bubble_sort(int *array, size_t length) {
     }
 }
 
-void selection_sort(int *array, size_t length) {
+void selection_sort(int* array, size_t length) {
     for (size_t i = length - 1; i > 0; --i) {
         size_t largest = 0;
         for (size_t j = 0; j <= i; ++j) {
@@ -37,15 +38,15 @@ void selection_sort(int *array, size_t length) {
     }
 }
 
-void heap_sort(int *array, size_t length) {
-    heap_min *heap = heap_min_create(length);
+void heap_sort(int* array, size_t length) {
+    heap_min* heap = heap_min_create(length);
     for (size_t i = 0; i < length; ++i)
         heap_min_insert(heap, array[i]);
     for (size_t i = 0; i < length; ++i)
         array[i] = heap_min_remove(heap);
 }
 
-void insetion_sort(int *array, size_t length) {
+void insetion_sort(int* array, size_t length) {
     for (size_t i = length - 1; i > 0; --i) {
         int to_insert = array[i - 1];
         size_t j;
@@ -56,7 +57,7 @@ void insetion_sort(int *array, size_t length) {
     }
 }
 
-static size_t quick_sort_partition(int *array, size_t left, size_t right) {
+static size_t quick_sort_partition(int* array, size_t left, size_t right) {
     int pivot = array[left];
     size_t down = left, up = right;
 
@@ -76,7 +77,7 @@ static size_t quick_sort_partition(int *array, size_t left, size_t right) {
     return up;
 }
 
-static void quick_sort_recursive(int *array, size_t left, size_t right) {
+static void quick_sort_recursive(int* array, size_t left, size_t right) {
     // partitioning
     size_t pivot = quick_sort_partition(array, left, right);
 
@@ -91,11 +92,11 @@ static void quick_sort_recursive(int *array, size_t left, size_t right) {
     }
 }
 
-void quick_sort(int *array, size_t length) {
+void quick_sort(int* array, size_t length) {
     quick_sort_recursive(array, 0, length - 1);
 }
 
-static void merge_no_extra_space(int *array1, int *array2, size_t len1, size_t len2) {
+static void __attribute_maybe_unused__ merge_no_extra_space(int* array1, int* array2, size_t len1, size_t len2) {
     for (size_t i = 0; i < len1; ++i) {
         if (array1[i] > array2[0]) {
             sorting_swap(array1 + i, array2 + 0);
@@ -106,8 +107,8 @@ static void merge_no_extra_space(int *array1, int *array2, size_t len1, size_t l
     }
 }
 
-static void merge(int *array1, int *array2, size_t len1, size_t len2) {
-    int *merged_array = calloc(len1 + len2, sizeof(array1[0]));
+static void merge(int* array1, int* array2, size_t len1, size_t len2) {
+    int* merged_array = calloc(len1 + len2, sizeof(array1[0]));
     size_t array1_index = 0, array2_index = 0;
     size_t merged_array_index = 0;
 
@@ -133,7 +134,7 @@ static void merge(int *array1, int *array2, size_t len1, size_t len2) {
     free(merged_array);
 }
 
-static void merge_sort_recursive(int *array, size_t low, size_t high) {
+static void merge_sort_recursive(int* array, size_t low, size_t high) {
     size_t length = high + 1 - low;
     if (length <= 1) {
         return;
@@ -149,6 +150,14 @@ static void merge_sort_recursive(int *array, size_t low, size_t high) {
     merge(array1, array2, len1, len2);
 }
 
-void merge_sort(int *array, size_t length) {
+void merge_sort(int* array, size_t length) {
     merge_sort_recursive(array, 0, length - 1);
+}
+
+void tree_sort(int* array, size_t length) {
+    avl_tree* tree = avl_tree_create();
+    for (size_t i = 0; i < length; ++i) {
+        avl_tree_insert(tree, array[i]);
+    }
+    avl_tree_fill_array_inorder(tree, array);
 }
