@@ -108,9 +108,9 @@ static void avl_tree_rl_rotate(avl_tree *tree) {
 }
 
 // allocates memory for a new node with two empty subtrees
-static avl_tree_node *avl_tree_create_node(int _data) {
+static avl_tree_node *avl_tree_create_node(int data) {
     avl_tree_node *node = (avl_tree_node *)malloc(sizeof(avl_tree_node));
-    node->data = _data;
+    node->data = data;
     node->left = avl_tree_create();
     node->right = avl_tree_create();
 
@@ -127,26 +127,26 @@ avl_tree *avl_tree_create(void) {
     return tree;
 }
 
-void avl_tree_insert(avl_tree *tree, int _data) {
+void avl_tree_insert(avl_tree *tree, int data) {
     if (avl_tree_empty(tree)) {
-        tree->root = avl_tree_create_node(_data);
-    } else if (_data < tree->root->data) {
-        avl_tree_insert(tree->root->left, _data);
+        tree->root = avl_tree_create_node(data);
+    } else if (data < tree->root->data) {
+        avl_tree_insert(tree->root->left, data);
 
         // necessary rotations LL or LR
         if (!avl_tree_balanced(tree)) {
-            if (_data < tree->root->left->root->data) {
+            if (data < tree->root->left->root->data) {
                 avl_tree_ll_rotate(tree);
             } else {
                 avl_tree_lr_rotate(tree);
             }
         }
     } else {
-        avl_tree_insert(tree->root->right, _data);
+        avl_tree_insert(tree->root->right, data);
 
         // necessary rotations RR or RL
         if (!avl_tree_balanced(tree)) {
-            if (_data < tree->root->right->root->data) {
+            if (data < tree->root->right->root->data) {
                 avl_tree_rl_rotate(tree);
             } else {
                 avl_tree_rr_rotate(tree);
@@ -158,10 +158,10 @@ void avl_tree_insert(avl_tree *tree, int _data) {
     avl_tree_update_height(tree);
 }
 
-void avl_tree_remove(avl_tree *tree, int _data) {
+void avl_tree_remove(avl_tree *tree, int data) {
     assert(!avl_tree_empty(tree));
 
-    if (tree->root->data == _data) {
+    if (tree->root->data == data) {
         if (avl_tree_leaf(tree)) {
             free(tree->root->left);
             free(tree->root->right);
@@ -193,8 +193,8 @@ void avl_tree_remove(avl_tree *tree, int _data) {
             tree->root->data = inorder_successor->root->data;
             avl_tree_remove(tree->root->right, tree->root->data);
         }
-    } else if (_data < tree->root->data) {
-        avl_tree_remove(tree->root->left, _data);
+    } else if (data < tree->root->data) {
+        avl_tree_remove(tree->root->left, data);
         if (!avl_tree_balanced(tree)) {
             if (avl_tree_balance_factor(tree->root->right) <= 0) {
                 avl_tree_rr_rotate(tree);
@@ -203,7 +203,7 @@ void avl_tree_remove(avl_tree *tree, int _data) {
             }
         }
     } else {
-        avl_tree_remove(tree->root->right, _data);
+        avl_tree_remove(tree->root->right, data);
         if (avl_tree_balanced(tree)) {
             if (avl_tree_balance_factor(tree->root->left) >= 0) {
                 avl_tree_ll_rotate(tree);
