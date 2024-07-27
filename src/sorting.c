@@ -112,7 +112,7 @@ void merge_sort_recursive(int *array, size_t low, size_t high) {
     int *mergedArray = (int *)calloc(length1 + length2, sizeof(int));
     size_t mergedArrayIndex = 0;
 
-    // take in as many elements until one array is depleted
+    // take in as many elements as possible until one array is depleted
     while (array1Index < length1 && array2Index < length2) {
         if (array1[array1Index] < array2[array2Index])
             mergedArray[mergedArrayIndex++] = array1[array1Index++];
