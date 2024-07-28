@@ -1,19 +1,26 @@
 #include "../include/main.h"
-#include "../include/list.h"
-#include "../include/sorting.h"
-
+#include "../include/heap.h"
 #include <stdio.h>
 
-#define ARRAY_LEN(array) (sizeof(array) / sizeof(array[0]))
-
+int compare(int x, int y)
+{
+    return y - x;
+}
 int main() {
-    int array[] = { 3, 6, 7, 5, 4, 9, 1 };
-    tree_sort(array, ARRAY_LEN(array));
+    heap* heap = heap_create(10, compare);
+    heap_insert(heap, 1);
+    heap_insert(heap, 3);
+    heap_insert(heap, 2);
+    heap_insert(heap, 5);
+    heap_insert(heap, 6);
+    heap_insert(heap, 4);
 
-    list* list = list_create();
-    for (size_t i = 0; i < ARRAY_LEN(array); ++i) {
-        list_add_before(list, 0, array[i]);
-    }
 
+    printf("%i ", heap_remove(heap));
+    printf("%i ", heap_remove(heap));
+    printf("%i ", heap_remove(heap));
+    printf("%i ", heap_remove(heap));
+    printf("%i ", heap_remove(heap));
+    printf("%i ", heap_remove(heap));
     return 0;
 }

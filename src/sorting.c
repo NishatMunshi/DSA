@@ -5,7 +5,7 @@
 #include <stdlib.h>
 
 #include "../include/avl_tree.h"
-#include "../include/heap_min.h"
+#include "../include/heap.h"
 
 static void sorting_swap(int* a, int* b) {
     int c = *a;
@@ -37,13 +37,13 @@ void selection_sort(int* array, size_t length) {
         sorting_swap(array + largest, array + i);
     }
 }
-
+static int compare(int x, int y) { return  y - x; }
 void heap_sort(int* array, size_t length) {
-    heap_min* heap = heap_min_create(length);
+    heap* heap = heap_create(length, compare);
     for (size_t i = 0; i < length; ++i)
-        heap_min_insert(heap, array[i]);
+        heap_insert(heap, array[i]);
     for (size_t i = 0; i < length; ++i)
-        array[i] = heap_min_remove(heap);
+        array[i] = heap_remove(heap);
 }
 
 void insetion_sort(int* array, size_t length) {
@@ -145,7 +145,7 @@ static void merge_sort_recursive(int* array, size_t low, size_t high) {
     merge_sort_recursive(array, low + length / 2, high);
 
     // merging
-    int *array1 = array + low, *array2 = array + low + length / 2;
+    int* array1 = array + low, * array2 = array + low + length / 2;
     size_t len1 = length / 2, len2 = high + 1 - length / 2 - low;
     merge(array1, array2, len1, len2);
 }
